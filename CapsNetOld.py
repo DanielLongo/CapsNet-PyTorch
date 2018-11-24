@@ -40,12 +40,19 @@ class CapsuleNet(nn.Module):
         # Layer 1: Just a conventional Conv2D layer
         self.conv1 = nn.Conv2d(input_size[0], 256, kernel_size=9, stride=1, padding=0)
 
-        # Layer 2: Conv2D layer with `squash` activation, then reshape to [None, num_caps, dim_caps]
-        self.primarycaps = PrimaryCapsule(256, 256, 8, kernel_size=9, stride=2, padding=0)
+
+        self.primarycaps = PrimaryCapsule()
+        # self.primarycaps = PrimaryCapsule(256, 256, 8, kernel_size=9, stride=2, padding=0)
 
         # Layer 3: Capsule layer. Routing algorithm works here.
-        self.digitcaps = DenseCapsule(in_num_caps=32*6*6, in_dim_caps=8,
-                                      out_num_caps=classes, out_dim_caps=16, routings=routings)
+        self.digitcaps = DenseCapsule(num_caps_in=32*6*6, num_dims_in=8,
+                                      num_caps_out=classes, num_dims_out=16, routings=routings)
+        # # Layer 2: Conv2D layer with `squash` activation, then reshape to [None, num_caps, dim_caps]
+
+
+        # # Layer 3: Capsule layer. Routing algorithm works here.
+        # self.digitcaps = DenseCapsule(in_num_caps=32*6*6, in_dim_caps=8,
+                                      # out_num_caps=classes, out_dim_caps=16, routings=routings)
 
         # Decoder network.
         self.decoder = nn.Sequential(
